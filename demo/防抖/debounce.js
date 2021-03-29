@@ -3,20 +3,20 @@
  * @Autor: hanipig
  * @Date: 2021-03-29 21:25:13
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 23:06:43
+ * @LastEditTime: 2021-03-29 23:52:28
  */
 var count = 1;
 var container = document.getElementById('container');
 var cancelBtn = document.getElementById('cancelBtn');
 
 function getUserAction (e) {
-  console.log(this);//未节流时指向目标元素   此时指向window
-  console.log(e)//未节流时指向原生事件对象   此时undefined
+  console.log(this);//未防抖时指向目标元素   此时指向window
+  console.log(e)//未防抖时指向原生事件对象   此时undefined
   container.innerHTML = count++;
   return "返回值";
 };
 
-//未进行节流
+//未进行防抖处理
 // container.onmousemove = getUserAction;
 let debounced = debounce(getUserAction, 10000, true);
 
@@ -26,9 +26,6 @@ container.onmousemove = debounced;
 cancelBtn.addEventListener("click", function () {
   debounced.cancel();
 })
-
-//第一版
-// this指向window
 
 function debounce (fn, wait, immediate) {
   let timer,
