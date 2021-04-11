@@ -1,20 +1,21 @@
 <!--
- * @Description: 
+ * @Description:
  * @Autor: hanipig
  * @Date: 2021-03-21 20:45:40
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2021-03-21 23:08:37
 -->
+
 ## Webpack 梳理
 
-+ 多入口打包
-+ 抽离css文件：mini-css-extract-plugin
-+ 抽离公共代码、第三方代码：添加optimization.splitChunks（initial：入口chunk，对异步导入的文件不处理；async：异步chunk，只对异步导入的文件处理；all：全部chunk）、optimization.cacheGroups.vendor（第三方模块）、optimization。cacheGroups.common（公共模块）
-+ 异步加载、处理jxs、vue（vue-loader）
-+ module、chunk、bundle的区别
-  > module：各个源码文件，webpack中一切皆模块
+- 多入口打包
+- 抽离 css 文件：mini-css-extract-plugin
+- 抽离公共代码、第三方代码：添加 optimization.splitChunks（initial：入口 chunk，对异步导入的文件不处理；async：异步 chunk，只对异步导入的文件处理；all：全部 chunk）、optimization.cacheGroups.vendor（第三方模块）、optimization。cacheGroups.common（公共模块）
+- 异步加载、处理 jxs、vue（vue-loader）
+- module、chunk、bundle 的区别
+  > module：各个源码文件，webpack 中一切皆模块
   >
-  > chunk：多个模块合成的，如entry、import()、splitChunk
+  > chunk：多个模块合成的，如 entry、import()、splitChunk
   >
   > bundle：最终的输出文件
 
@@ -35,7 +36,9 @@
   - 优化代码调试
     - source-map：一种提供源代码到构建后代码映射技术
 - 生产环境
+
   - 优化打包构建速度
+
     - oneOf：只会匹配一个 loader ，不能有两个配置处理同一种类型文件
     - 缓存：babel 缓存（直接配置 cacheDirectory: true,让第二次打包构建速度更快）、文件资源缓存
       > hash：每次构建时会生成一个唯一的 hash 值，缺点:js css 使用同一个 hash 值，如果重新打包，可能会导致 js css 缓存失效
@@ -44,27 +47,33 @@
       >
       > contenthash：根据文件的内容生成 hash,根据文件的内容生成的 hash,不同文件 hash 值一定不一样（让代码上线运行缓存更好使用）
     - 多进程打包 thread-loader
-    - externals 拒绝指定包被打包进来（比如采用cdn引用进来）
-    - dll 动态连接库：使用dll技术对某些库进行单独打包
-    
+    - externals 拒绝指定包被打包进来（比如采用 cdn 引用进来）
+    - dll 动态连接库：使用 dll 技术对某些库进行单独打包
+
   - 优化代码运行性能
-      - tree shaking（去除无用代码，减少代码体积）
-        > 前提条件（1.使用 es6 模块化 2.开启 production 模式 ）
+
+    - tree shaking（去除无用代码，减少代码体积）
+      > 前提条件（1.使用 es6 模块化 2.开启 production 模式 ）
+      >
+      > 可搭配 sideEffect 配置防止 css less...等资源被误当做无用代码被过滤
+    - 代码分割（code split）
+
+      - 多入口实现：有一个入口，最终输出就有一个 bundle
+      - optimization.splitChunks.chunks：'all'
+        > 1.可以将 node_modules 中的代码单独打包成一个 chunk 最终输出
         >
-        > 可搭配 sideEffect 配置防止 css less...等资源被误当做无用代码被过滤
-      - 代码分割（code split）
-        + 多入口实现：有一个入口，最终输出就有一个bundle
-        + optimization.splitChunks.chunks：'all' 
-          > 1.可以将node_modules中的代码单独打包成一个chunk最终输出
-          >
-          >2.自动分析多入口chunk中，有没有公共的文件，如果有会打包成单独的一个chunk
-        + 通过js代码，让某个文件被单独打包成一个chunk（import 动态导入语法：能将某个文件单独打包）
-          > import(/\*webpackChunkName: '指定打包后的chunkname'\*/'./文件').then((result) => {
+        > 2.自动分析多入口 chunk 中，有没有公共的文件，如果有会打包成单独的一个 chunk
+      - 通过 js 代码，让某个文件被单独打包成一个 chunk（import 动态导入语法：能将某个文件单独打包）
 
-          }).then((err) => {})
-      - 懒加载 lazy loading（当文件需要使用时才加载）、预加载（预加载会在使用之前，提前加载js文件）
-        > 正常加载可以理解为并行加载（同一时间加载多个文件），预加载：等其他资源加载完毕，浏览器空闲了，再偷偷加载资源（低版本浏览器有兼容性问题，慎用）
-        > import(/\*webpackChunkName: '指定打包后的chunkname', webpackPrefetch: true \*/'./文件').then((result) => {
+        > import(/\*webpackChunkName: '指定打包后的 chunkname'\*/'./文件').then((result) => {
 
-          }).then((err) => {})
-      - PWA 渐进式网络开发应用程序（离线可访问）：workbox --> workbox-webpack-plugin
+        }).then((err) => {})
+
+    - 懒加载 lazy loading（当文件需要使用时才加载）、预加载（预加载会在使用之前，提前加载 js 文件）
+
+      > 正常加载可以理解为并行加载（同一时间加载多个文件），预加载：等其他资源加载完毕，浏览器空闲了，再偷偷加载资源（低版本浏览器有兼容性问题，慎用）
+      > import(/\*webpackChunkName: '指定打包后的 chunkname', webpackPrefetch: true \*/'./文件').then((result) => {
+
+      }).then((err) => {})
+
+    - PWA 渐进式网络开发应用程序（离线可访问）：workbox --> workbox-webpack-plugin
