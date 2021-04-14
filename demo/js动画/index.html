@@ -1,0 +1,36 @@
+<!DOCTYPE html
+          PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>滑动效果</title>
+  <script>
+    // https://www.infoq.cn/article/javascript-high-performance-animation-and-page-rendering?utm_source=related_read&utm_medium=article
+    function moveSearch(topValue) {
+      var _top = document.getElementById("searchDiv").scrollTop;
+      if (_top < topValue) {
+        document.getElementById("searchDiv").scrollTop += Math.round(Math.abs(_top - topValue) / 2);
+      } else if (_top > topValue) {
+        document.getElementById("searchDiv").scrollTop -= Math.round(Math.abs(_top - topValue) / 2);
+      }
+      if (_top != topValue) {
+        setTimeout("moveSearch(" + topValue + ")", 1);
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="searchDiv" style="border:1px solid blue;width:200px;height:400px;overflow:hidden">
+    <div style="border:1px solid blue;width:200px;height:398px;">11111111<br>11111111<br>11111111<br></div>
+    <div style="border:1px solid blue;width:200px;height:398px;">22222222<br>22222222<br>22222222<br></div>
+    <div style="border:1px solid blue;width:200px;height:398px;">33333333<br>33333333<br>33333333<br></div>
+  </div>
+  <div>选择按钮</div>
+  <div><input type="button" value="look 1" onclick="moveSearch(0)" /></div>
+  <div><input type="button" value="look 2" onclick="moveSearch(400)" /></div>
+  <div><input type="button" value="look 3" onclick="moveSearch(800)" /></div>
+  <div id="show"></div>
+</body>
+<html>
