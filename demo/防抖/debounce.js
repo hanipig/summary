@@ -3,7 +3,7 @@
  * @Autor: hanipig
  * @Date: 2021-03-29 21:25:13
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-03-29 23:52:28
+ * @LastEditTime: 2021-04-15 00:44:32
  */
 var count = 1;
 var container = document.getElementById('container');
@@ -38,7 +38,7 @@ function debounce (fn, wait, immediate) {
     if (timer) clearTimeout(timer);//clearTimerout 后timer的值还是之前那个句柄，为truely值
 
     if (immediate) {
-      //如果之前未执行过，则!timer为true 即立即执行
+      //如果timer为falsely，立即执行，则!timer为true 即立即执行
       let callNow = !timer;
       timer = setTimeout(function () {
         timer = null;//每次把timer设置为null，确保每下一次能够立即执行
